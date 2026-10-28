@@ -7,7 +7,7 @@
 size = Vector2(102, 89)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_55dqy"]
-size = Vector2(843, 57)
+size = Vector2(4454, 104)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_qfqqu"]
 b = Vector2(0, 500)
@@ -17,7 +17,7 @@ b = Vector2(0, 500)
 [node name="Node2D" type="Node2D" unique_id=2126642954]
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=969794503]
-position = Vector2(100, 400)
+position = Vector2(89, 451)
 script = ExtResource("1_k1aq6")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" unique_id=1758863167]
@@ -27,21 +27,20 @@ scale = Vector2(0.7968749, 0.68749994)
 texture = ExtResource("2_2rvgm")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=585595458]
-position = Vector2(-1, -1)
 shape = SubResource("RectangleShape2D_qfqqu")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=110270745]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1090513497]
-position = Vector2(258.5, 480.5)
+position = Vector2(2064, 582)
 shape = SubResource("RectangleShape2D_55dqy")
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1330937000]
 texture = ExtResource("2_2rvgm")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1922680147]
-position = Vector2(257.24997, 480.75)
-scale = Vector2(6.6054683, 0.44921893)
+position = Vector2(1999.125, 585)
+scale = Vector2(33.779297, 0.85937494)
 texture = ExtResource("2_2rvgm")
 
 [node name="RigidBody2D" type="RigidBody2D" parent="." unique_id=431100950]

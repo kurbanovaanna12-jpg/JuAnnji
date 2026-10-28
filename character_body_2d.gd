@@ -22,6 +22,8 @@ enum PlayerState { NORMAL, JUMPING, GRABBING, SWINGING, FALLING }
 @export var minimum_swing_launch_speed := 280.0
 @export var swing_angular_damp := 0.12
 @export var release_upward_boost := 35.0
+@export_range(1.0, 20.0, 0.1) var release_distance_multiplier := 2.5
+@export_range(0.05, 1.0, 0.05) var release_hold_time := 0.25
 
 @export_group("Debug")
 @export var debug_grab := true
@@ -49,6 +51,10 @@ var rope_freeze_mode_before_grab := RigidBody2D.FREEZE_MODE_STATIC
 var rope_pendulum_length := 250.0
 var swing_angle := 0.0
 var swing_angular_velocity := 0.0
+var flight_horizontal_multiplier := 1.0
+var release_input_ready := false
+var release_pending := false
+var release_hold_elapsed := 0.0
 
 
 func _ready() -> void:
@@ -75,12 +81,17 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 		return
 
+	if is_on_floor():
+		flight_horizontal_multiplier = 1.0
 	var direction := Input.get_axis("move_left", "move_right")
+	# Scale horizontal air control along with launch speed so holding a direction
+	# does not immediately cancel the longer flight. Vertical motion is unchanged.
+	var horizontal_scale := flight_horizontal_multiplier
 	if direction != 0.0:
-		velocity.x = move_toward(velocity.x, direction * move_speed, acceleration * delta)
+		velocity.x = move_toward(velocity.x, direction * move_speed * horizontal_scale, acceleration * horizontal_scale * delta)
 	else:
 		var current_friction := friction if is_on_floor() else air_friction
-		velocity.x = move_toward(velocity.x, 0.0, current_friction * delta)
+		velocity.x = move_toward(velocity.x, 0.0, current_friction * horizontal_scale * delta)
 
 	if is_on_floor():
 		if velocity.y > 0.0:
@@ -101,6 +112,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	if is_on_floor() and velocity.y >= 0.0:
+		flight_horizontal_multiplier = 1.0
 		jump_armed = false
 		state = PlayerState.NORMAL
 	elif velocity.y < 0.0:
@@ -152,6 +164,11 @@ func _has_clear_grab_path(candidate: Vector2) -> bool:
 
 
 func _begin_rope_grab(candidate_world: Vector2, candidate_local: Vector2) -> void:
+	flight_horizontal_multiplier = 1.0
+	# The Space used to jump onto the vine must be released before a new gesture.
+	release_input_ready = not Input.is_action_pressed("release_grab")
+	release_pending = false
+	release_hold_elapsed = 0.0
 	add_collision_exception_with(rope)
 	ignoring_rope_collision = true
 	rope_local_grab_point = rope.to_local(candidate_world)
@@ -226,11 +243,34 @@ func _process_rope_follow(delta: float) -> void:
 		_release_rope(velocity)
 		return
 
-	if Input.is_action_just_pressed("release_grab"):
+	_process_release_input(delta)
+
+
+func _process_release_input(delta: float) -> void:
+	if not release_input_ready:
+		if not Input.is_action_pressed("release_grab"):
+			release_input_ready = true
+		return
+
+	if not release_pending and (Input.is_action_pressed("release_grab") or Input.is_action_just_pressed("release_grab")):
+		release_pending = true
+		release_hold_elapsed = 0.0
+	if not release_pending:
+		return
+
+	# A tap releases normally on key-up; a hold launches as soon as it is charged.
+	if not Input.is_action_pressed("release_grab"):
 		_release_rope(velocity)
+		return
+	release_hold_elapsed += delta
+	if release_hold_elapsed >= release_hold_time:
+		_release_rope(velocity, true)
 
 
-func _release_rope(inherited_velocity: Vector2) -> void:
+func _release_rope(inherited_velocity: Vector2, boost_distance: bool = false) -> void:
+	release_pending = false
+	release_hold_elapsed = 0.0
+	release_input_ready = false
 	if is_instance_valid(rope):
 		rope.rotation = rope_rest_rotation + swing_angle
 		rope.angular_velocity = swing_angular_velocity
@@ -239,6 +279,9 @@ func _release_rope(inherited_velocity: Vector2) -> void:
 		rope.freeze_mode = rope_freeze_mode_before_grab
 		rope.freeze = rope_freeze_before_grab
 	velocity = inherited_velocity + Vector2.UP * release_upward_boost
+	# Only a deliberate jump off the vine receives the distance boost.
+	flight_horizontal_multiplier = release_distance_multiplier if boost_distance else 1.0
+	velocity.x *= flight_horizontal_multiplier
 	cooldown_timer = grab_cooldown
 	state = PlayerState.FALLING if velocity.y >= 0.0 else PlayerState.JUMPING
 	jump_armed = true
