@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://djx141kpw8hex"]
+
+[ext_resource type="Script" uid="uid://cwj318gemsj4l" path="res://character_body_2d.gd" id="1_k1aq6"]
+[ext_resource type="Texture2D" uid="uid://cqxntwq0tpadh" path="res://icon.svg" id="2_2rvgm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qfqqu"]
+size = Vector2(102, 89)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_55dqy"]
+size = Vector2(843, 57)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_qfqqu"]
+a = Vector2(0, 0)
+b = Vector2(0, 500)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_55dqy"]
+
+[node name="Node2D" type="Node2D" unique_id=2126642954]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=969794503]
+position = Vector2(100, 400)
+script = ExtResource("1_k1aq6")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" unique_id=1758863167]
+
+[node name="Icon" type="Sprite2D" parent="CharacterBody2D" unique_id=761174871]
+scale = Vector2(0.7968749, 0.68749994)
+texture = ExtResource("2_2rvgm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=585595458]
+position = Vector2(-1, -1)
+shape = SubResource("RectangleShape2D_qfqqu")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=110270745]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1090513497]
+position = Vector2(258.5, 480.5)
+shape = SubResource("RectangleShape2D_55dqy")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1330937000]
+texture = ExtResource("2_2rvgm")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1922680147]
+position = Vector2(257.24997, 480.75)
+scale = Vector2(6.6054683, 0.44921893)
+texture = ExtResource("2_2rvgm")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="." unique_id=431100950]
+position = Vector2(312, -187)
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D" unique_id=1663152186]
+shape = SubResource("SegmentShape2D_qfqqu")
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D" unique_id=663469632]
+
+[node name="Icon" type="Sprite2D" parent="RigidBody2D" unique_id=1457948789]
+position = Vector2(0, 250)
+scale = Vector2(0.023437448, 4.640625)
+texture = ExtResource("2_2rvgm")
+
+[node name="RoofAnchor" type="StaticBody2D" parent="." unique_id=1437761394]
+position = Vector2(312, -187)
+physics_material_override = SubResource("PhysicsMaterial_55dqy")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="." unique_id=707477984]
+position = Vector2(312, -187)
+node_a = NodePath("../RoofAnchor")
+node_b = NodePath("../RigidBody2D")
