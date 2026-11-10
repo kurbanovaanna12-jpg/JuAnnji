@@ -225,9 +225,9 @@ func _build_hud() -> void:
 	var journal := _panel(layer,Rect2(1000,24,252,84),Color(0.04,0.09,0.08,0.84))
 	_label(journal,"ЦЕЛЬ ЭКСПЕДИЦИИ",Vector2(18,12),13,GOLD)
 	count_label = _label(journal,"Печати солнца   0 / 3",Vector2(18,39),19)
-	var help := _panel(layer,Rect2(28,640,870,54),Color(0.04,0.09,0.08,0.86))
+	var help := _panel(layer,Rect2(190,182,900,48),Color(0.04,0.09,0.08,0.86))
 	hint_label = _label(help,"",Vector2(18,15),16)
-	_label(layer,"ESC  пауза     R  к контрольной точке",Vector2(948,668),13,Color(0.9,0.88,0.77,0.85))
+	_label(layer,"ESC  пауза     R  к контрольной точке",Vector2(480,688),13,Color(0.9,0.88,0.77,0.65))
 	notice_panel = _panel(layer,Rect2(240,122,800,48),Color(0.04,0.09,0.08,0.86))
 	notice_label = _label(notice_panel,"",Vector2(18,13),16,GOLD)
 	notice_label.size.x = 764
@@ -247,6 +247,11 @@ func _build_hud() -> void:
 	fade.color = Color(0.03,0.07,0.06,0)
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(fade)
+	var controls := Control.new()
+	controls.name = "TouchControls"
+	controls.set_script(load("res://touch_controls.gd"))
+	controls.level = self
+	layer.add_child(controls)
 
 func _notify(text: String, duration: float = 3.0) -> void:
 	notice = text
@@ -266,15 +271,15 @@ func _process(delta: float) -> void:
 	notice_label.modulate.a = minf(1.0,notice_time)
 	count_label.text = "Печати солнца   %d / 3" % relics.count(true)
 	if actor.position.x < 550:
-		hint_label.text = "A / D или стрелки — идти   •   Пробел — прыжок; удерживайте для высоты"
+		hint_label.text = "Справа — джойстик движения. Слева — прыжок; удерживайте для высоты"
 	elif actor.position.x < 1720:
 		hint_label.text = "Соберите золотые печати на террасах. Короткое нажатие — короткий прыжок."
 	elif actor.position.x < 2300:
-		hint_label.text = "Прыгните к лиане  •  A / D — раскачаться  •  W / S — высота  •  Пробел — отпустить"
+		hint_label.text = "На лиане: джойстик — раскачивание и подъём; повторный прыжок — отпустить"
 	elif actor.position.x < 4400:
-		hint_label.text = "Поднимайтесь по каменным блокам. Удерживайте пробел для высокого прыжка."
+		hint_label.text = "Поднимайтесь по каменным блокам. Удерживайте кнопку прыжка для высоты."
 	elif actor.position.x < 5480:
-		hint_label.text = "Лиана ведёт наверх: W / ↑ — подниматься. Затем раскачайтесь вправо и отпустите пробел."
+		hint_label.text = "Лиана ведёт наверх: джойстик вверх — подъём; вправо — раскачивание."
 	else:
 		hint_label.text = "Войдите в храм." if gate_open else "Ворота откроются, когда вы соберёте все три печати."
 	if respawn_time > 0:
