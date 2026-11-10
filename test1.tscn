@@ -2,66 +2,84 @@
 
 [ext_resource type="Script" uid="uid://cwj318gemsj4l" path="res://character_body_2d.gd" id="1_k1aq6"]
 [ext_resource type="Texture2D" uid="uid://cqxntwq0tpadh" path="res://icon.svg" id="2_2rvgm"]
+[ext_resource type="Script" path="res://flexible_vine.gd" id="3_flexible_vine"]
+[ext_resource type="Texture2D" path="res://assets/characters/hero_side_idle.png" id="4_hero"]
+[ext_resource type="Script" path="res://hero_rig.gd" id="5_rig"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qfqqu"]
-size = Vector2(102, 89)
+size = Vector2(48, 175)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_55dqy"]
-size = Vector2(4454, 104)
+size = Vector2(820, 104)
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_qfqqu"]
-b = Vector2(0, 500)
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_55dqy"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_Landing"]
+size = Vector2(820, 104)
 
 [node name="Node2D" type="Node2D" unique_id=2126642954]
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=969794503]
 position = Vector2(89, 451)
 script = ExtResource("1_k1aq6")
+hand_offset = Vector2(0, -110)
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" unique_id=1758863167]
 
 [node name="Icon" type="Sprite2D" parent="CharacterBody2D" unique_id=761174871]
-scale = Vector2(0.7968749, 0.68749994)
-texture = ExtResource("2_2rvgm")
+visible = false
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_hero")
+
+[node name="HeroRig" type="Node2D" parent="CharacterBody2D"]
+script = ExtResource("5_rig")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=585595458]
+position = Vector2(0, -15)
 shape = SubResource("RectangleShape2D_qfqqu")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+offset = Vector2(0, -220)
+zoom = Vector2(0.8, 0.8)
+limit_left = -650
+limit_top = -260
+limit_right = 1800
+limit_bottom = 800
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=110270745]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1090513497]
-position = Vector2(2064, 582)
+position = Vector2(247, 582)
 shape = SubResource("RectangleShape2D_55dqy")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1330937000]
-texture = ExtResource("2_2rvgm")
-
 [node name="Icon" type="Sprite2D" parent="." unique_id=1922680147]
-position = Vector2(1999.125, 585)
-scale = Vector2(33.779297, 0.85937494)
+position = Vector2(247.125, 585)
+scale = Vector2(6.404297, 0.85937494)
 texture = ExtResource("2_2rvgm")
 
-[node name="RigidBody2D" type="RigidBody2D" parent="." unique_id=431100950]
+[node name="LandingPlatform" type="StaticBody2D" parent="." unique_id=2139551920]
+position = Vector2(1190, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LandingPlatform" unique_id=207570092]
+position = Vector2(178, 584)
+shape = SubResource("RectangleShape2D_Landing")
+
+[node name="LandingPlatformVisual" type="Sprite2D" parent="." unique_id=647900085]
+position = Vector2(1368.0001, 584)
+scale = Vector2(6.404297, 0.85937494)
+texture = ExtResource("2_2rvgm")
+
+[node name="Vine2D" type="Node2D" parent="." unique_id=431100950]
 unique_name_in_owner = true
 position = Vector2(312, -187)
+script = ExtResource("3_flexible_vine")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D" unique_id=1663152186]
-shape = SubResource("SegmentShape2D_qfqqu")
+[node name="Outline" type="Line2D" parent="Vine2D"]
+z_index = 1
+width = 17.0
+default_color = Color(0.0941176, 0.164706, 0.27451, 1)
 
-[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D" unique_id=663469632]
-
-[node name="Icon" type="Sprite2D" parent="RigidBody2D" unique_id=1457948789]
-position = Vector2(0, 250)
-scale = Vector2(0.023437448, 4.640625)
-texture = ExtResource("2_2rvgm")
-
-[node name="RoofAnchor" type="StaticBody2D" parent="." unique_id=1437761394]
-position = Vector2(312, -187)
-physics_material_override = SubResource("PhysicsMaterial_55dqy")
-
-[node name="PinJoint2D" type="PinJoint2D" parent="." unique_id=707477984]
-position = Vector2(312, -187)
-node_a = NodePath("../RoofAnchor")
-node_b = NodePath("../RigidBody2D")
+[node name="VineLine" type="Line2D" parent="Vine2D"]
+z_index = 2
+width = 11.0
+default_color = Color(0.294118, 0.607843, 0.819608, 1)

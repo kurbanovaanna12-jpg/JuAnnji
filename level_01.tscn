@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://level_01.gd" id="1"]
+[ext_resource type="Script" path="res://character_body_2d.gd" id="2"]
+[ext_resource type="Script" path="res://hero_rig.gd" id="3"]
+[ext_resource type="Script" path="res://flexible_vine.gd" id="4"]
+
+[sub_resource type="RectangleShape2D" id="PlayerShape"]
+size = Vector2(48, 175)
+
+[node name="TempleOfTheSun" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Vine2D" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(2070, -1800)
+script = ExtResource("4")
+vine_length = 2330.0
+outline_width = 11.0
+vine_width = 7.0
+
+[node name="Outline" type="Line2D" parent="Vine2D"]
+z_index = 1
+[node name="VineLine" type="Line2D" parent="Vine2D"]
+z_index = 2
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(190, 547.5)
+script = ExtResource("2")
+hand_offset = Vector2(0, -110)
+debug_grab = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(0, -15)
+shape = SubResource("PlayerShape")
+
+[node name="HeroRig" type="Node2D" parent="Player"]
+script = ExtResource("3")
+z_index = 5
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+offset = Vector2(180, -155)
+limit_left = 0
+limit_top = 0
+limit_right = 4520
+limit_bottom = 850
+position_smoothing_enabled = true
+position_smoothing_speed = 5.0
+

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://coeh17omfq86f"]
+
+[ext_resource type="Script" uid="uid://cd87o733j8yb4" path="res://hero_rig.gd" id="1"]
+
+[node name="Preview" type="Node2D" unique_id=1831635901]
+
+[node name="HeroRig" type="Node2D" parent="." unique_id=175040774]
+position = Vector2(540, 340)
+scale = Vector2(3, 3)
+script = ExtResource("1")
