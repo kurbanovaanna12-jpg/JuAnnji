@@ -7,3 +7,5 @@ GitHub Pages source: main branch, /docs folder. No cross-origin isolation header
 
 The docs folder contains the ready-to-serve release. Export a new Web release as index.html with threads disabled to update the game. Preserve the custom launch page, updating its Engine config fileSizes when replacing the exported binaries.
 
+
+Cache-busted runtime files pilot-20261111.wasm and pilot-20261111.pck ensure Safari doesn't reuse the old movement-layout bundle.
