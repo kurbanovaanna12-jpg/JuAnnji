@@ -271,7 +271,7 @@ func _process(delta: float) -> void:
 	notice_label.modulate.a = minf(1.0,notice_time)
 	count_label.text = "Печати солнца   %d / 3" % relics.count(true)
 	if actor.position.x < 550:
-		hint_label.text = "Справа — джойстик движения. Слева — прыжок; удерживайте для высоты"
+		hint_label.text = "Слева — джойстик движения. Справа — прыжок; удерживайте для высоты"
 	elif actor.position.x < 1720:
 		hint_label.text = "Соберите золотые печати на террасах. Короткое нажатие — короткий прыжок."
 	elif actor.position.x < 2300:
@@ -443,3 +443,4 @@ func _ambience() -> void:
 	player.volume_db = -20
 	add_child(player)
 	player.play()
+

@@ -1,5 +1,5 @@
 extends Control
-## Two independent fingers: jump on the left, analog movement on the right.
+## Two independent fingers: analog movement on the left, jump on the right.
 const DEAD_ZONE := 0.16
 const TRAVEL := 52.0
 var stick_center := Vector2.ZERO
@@ -25,8 +25,8 @@ func _layout() -> void:
 		if safe.size.x > 0 and safe.size.y > 0:
 			var inverse := get_viewport().get_screen_transform().affine_inverse()
 			bounds = Rect2(inverse * safe.position, inverse.basis_xform(safe.size))
-	stick_center = Vector2(bounds.end.x - 138.0, bounds.end.y - 130.0)
-	jump_center = Vector2(bounds.position.x + 138.0, bounds.end.y - 130.0)
+	stick_center = Vector2(bounds.position.x + 138.0, bounds.end.y - 130.0)
+	jump_center = Vector2(bounds.end.x - 138.0, bounds.end.y - 130.0)
 	queue_redraw()
 
 func _process(_delta: float) -> void:
@@ -135,4 +135,5 @@ func _draw() -> void:
 	var arrow := PackedVector2Array([jump_center+Vector2(-18,0),jump_center+Vector2(0,-18),jump_center+Vector2(18,0)])
 	draw_polyline(arrow, Color(0.97,0.94,0.83,0.7), 3.0, true)
 	draw_line(jump_center+Vector2(0,-16),jump_center+Vector2(0,21),Color(0.97,0.94,0.83,0.7),3.0,true)
+
 
